@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>The Secret Vault</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="login-box">
+  <h1>The Secret Vault</h1>
+  <p>Introduce la contraseña maestra</p>
+  <input type="password" id="pass" placeholder="Contraseña">
+  <button onclick="login()">Entrar</button>
+  <p id="err"></p>
+</div>
+
+<script>
+// Lista de contraseñas maestras
+const validPasswords = [
+  "ShadowVault#92",
+  "GhostKey_781",
+  "NebulaLock!55",
+  "TitanGate_403",
+  "CrimsonSeal#88",
+  "ZeroEntry!994",
+  "DarkCipher_72",
+  "VortexWall#601",
+  "SilentCore!37",
+  "IronShield_558"
+];
+
+function login() {
+  const p = document.getElementById("pass").value;
+  
+  if (validPasswords.includes(p)) {
+    localStorage.setItem("vault_key", p);
+    window.location.href = "panel.html";
+  } else {
+    document.getElementById("err").innerText = "Contraseña incorrecta";
+  }
+}
+</script>
+
+</body>
+</html>
