@@ -1,39 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Panel – The Secret Vault</title>
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-</head>
-<body>
-
-<div id="content">
-  <h2>Cargando panel seguro...</h2>
-</div>
-
-<script>
 const key = localStorage.getItem("vault_key");
 
 fetch("panel.enc")
   .then(r => r.text())
   .then(enc => {
-    let decrypted;
     try {
-      decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8);
-    } catch {
-      decrypted = "";
-    }
+      // Limpiar saltos de línea extra
+      enc = enc.trim();
+      const bytes = CryptoJS.AES.decrypt(enc, key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-    if (!decrypted || decrypted.length < 5) {
+      if (!decrypted || decrypted.length < 5) {
+        document.getElementById("content").innerHTML =
+          "<h2>Acceso denegado</h2><p>Contraseña incorrecta.</p>";
+        return;
+      }
+
+      document.getElementById("content").innerHTML = decrypted;
+    } catch (e) {
       document.getElementById("content").innerHTML =
-        "<h2>Acceso denegado</h2><p>Contraseña incorrecta.</p>";
-      return;
+        "<h2>Acceso denegado</h2><p>Error de descifrado.</p>";
+      console.error(e);
     }
-
-    document.getElementById("content").innerHTML = decrypted;
   });
-</script>
-
-</body>
-</html>
