@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Panel – The Secret Vault</title>
-<link rel="stylesheet" href="styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-
 <div id="content">
   <h2>Cargando panel seguro...</h2>
 </div>
@@ -15,45 +13,24 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const key = localStorage.getItem("vault_key");
-
-  if (!key) {
-    document.getElementById("content").innerHTML =
-      "<h2>Acceso denegado</h2><p>No hay contraseña guardada. Vuelve al login.</p>";
-    return;
-  }
+  if (!key) { document.getElementById("content").innerHTML = "No hay contraseña."; return; }
 
   fetch("panel.enc")
-    .then(r => {
-      if (!r.ok) throw new Error("No se pudo cargar panel.enc");
-      return r.text();
-    })
+    .then(r => r.text())
     .then(enc => {
-      try {
-        // Limpiar saltos de línea extra
         enc = enc.trim();
         const bytes = CryptoJS.AES.decrypt(enc, key);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
 
-        if (!decrypted || decrypted.length < 5) {
-          document.getElementById("content").innerHTML =
-            "<h2>Acceso denegado</h2><p>Contraseña incorrecta.</p>";
-          return;
+        if (!decrypted) {
+            document.getElementById("content").innerHTML = "Contraseña incorrecta.";
+            return;
         }
 
         document.getElementById("content").innerHTML = decrypted;
-      } catch (e) {
-        document.getElementById("content").innerHTML =
-          "<h2>Acceso denegado</h2><p>Error de descifrado.</p>";
-        console.error(e);
-      }
     })
-    .catch(err => {
-      document.getElementById("content").innerHTML =
-        "<h2>Error</h2><p>No se pudo cargar el panel cifrado.</p>";
-      console.error(err);
-    });
+    .catch(() => { document.getElementById("content").innerHTML = "No se pudo cargar panel.enc"; });
 });
 </script>
-
 </body>
 </html>
