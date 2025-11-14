@@ -3,34 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <title>Panel – The Secret Vault</title>
+<link rel="stylesheet" href="styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
+
 <div id="content">
   <h2>Cargando panel seguro...</h2>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const key = localStorage.getItem("vault_key");
-  if (!key) { document.getElementById("content").innerHTML = "No hay contraseña."; return; }
+const key = localStorage.getItem("vault_key");
 
-  fetch("panel.enc")
-    .then(r => r.text())
-    .then(enc => {
-        enc = enc.trim();
-        const bytes = CryptoJS.AES.decrypt(enc, key);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+if (!key) {
+  document.getElementById("content").innerHTML =
+    "<h2>No hay contraseña</h2><p>Vuelve al inicio.</p>";
+}
 
-        if (!decrypted) {
-            document.getElementById("content").innerHTML = "Contraseña incorrecta.";
-            return;
-        }
+const files = [
+  "panel-A.enc",
+  "panel-B.enc",
+  "panel-C.enc",
+  "panel-D.enc",
+  "panel-E.enc",
+  "panel-F.enc",
+  "panel-G.enc",
+  "panel-H.enc",
+  "panel-I.enc",
+  "panel-J.enc",
+];
 
-        document.getElementById("content").innerHTML = decrypted;
-    })
-    .catch(() => { document.getElementById("content").innerHTML = "No se pudo cargar panel.enc"; });
-});
+let opened = false;
+
+async function tryDecrypt() {
+  for (const file of files) {
+    try {
+      const res = await fetch(file);
+      const encBase64 = await res.text();
+      const encrypted = atob(encBase64.trim());
+
+      const bytes = CryptoJS.AES.decrypt(encrypted, key);
+      const dec = bytes.toString(CryptoJS.enc.Utf8);
+
+      if (dec && dec.length > 5) {
+        document.getElementById("content").innerHTML = dec;
+        opened = true;
+        return;
+      }
+    } catch {}
+  }
+
+  if (!opened) {
+    document.getElementById("content").innerHTML =
+      "<h2>Acceso denegado</h2><p>Contraseña incorrecta.</p>";
+  }
+}
+
+tryDecrypt();
+
 </script>
+
 </body>
 </html>
