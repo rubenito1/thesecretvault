@@ -3,25 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <title>The Secret Vault</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>The Secret Vault</h1>
-<p>Introduce contraseña:</p>
-<input type="password" id="pass">
-<button onclick="login()">Entrar</button>
+
+<div class="container">
+  <h1>The Secret Vault</h1>
+  <input id="pass" type="password" placeholder="Contraseña">
+  <button onclick="go()">Entrar</button>
+</div>
 
 <script>
-const validPasswords = ["prueba123"]; // contraseña de prueba
-
-function login() {
-    const p = document.getElementById("pass").value;
-    if (validPasswords.includes(p)) {
-        localStorage.setItem("vault_key", p);
-        window.location.href = "panel.html";
-    } else {
-        alert("Contraseña incorrecta");
-    }
+function go() {
+  const p = document.getElementById("pass").value;
+  localStorage.setItem("vault_key", p);
+  window.location.href = "panel.html";
 }
 </script>
+
 </body>
 </html>
