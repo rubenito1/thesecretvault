@@ -1,38 +1,19 @@
-<div id="loader">Cargando...</div>
-<div id="content" class="hidden"></div>
-<button id="logoutBtn" class="hidden" onclick="logout()">Cerrar sesión</button>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script>
 const key = localStorage.getItem("vault_key");
 const file = localStorage.getItem("vault_file");
 
 if(!key || !file) window.location.href="index.html";
 
 fetch(file)
-.then(r=>r.text())
-.then(enc=>{
+.then(r => r.text())
+.then(enc => {
   enc = enc.trim();
   let decrypted = "";
-  try { decrypted = CryptoJS.AES.decrypt(enc,key).toString(CryptoJS.enc.Utf8); } catch {}
-  if(!decrypted || decrypted.length<5) {
-    document.getElementById("loader").style.display="none";
-    document.getElementById("content").classList.remove("hidden");
-    document.getElementById("content").innerHTML="<h2>Acceso denegado</h2>";
+  try { decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8); } catch {}
+
+  if(!decrypted || decrypted.length < 5) {
+    document.getElementById("content").innerHTML = "<h2>Acceso denegado</h2>";
     return;
   }
-  const delay = 600+Math.random()*1400;
-  setTimeout(()=>{
-    document.getElementById("loader").style.display="none";
-    document.getElementById("content").classList.remove("hidden");
-    document.getElementById("logoutBtn").classList.remove("hidden");
-    document.getElementById("content").innerHTML=decrypted;
-  }, delay);
-});
 
-function logout(){
-  localStorage.removeItem("vault_key");
-  localStorage.removeItem("vault_file");
-  window.location.href="index.html";
-}
-</script>
+  document.getElementById("content").innerHTML = decrypted;
+});
