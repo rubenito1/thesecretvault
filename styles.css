@@ -85,30 +85,3 @@ input {
 }
 
 /* -------------------- PANEL -------------------- */
-
-.hidden { display: none; }
-
-.card-blocked, .card-unlocked {
-    padding: 12px;
-    border-radius: 12px;
-    margin: 8px 0;
-    font-size: 17px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
-.card-blocked { background: #b53232c9; }
-.card-unlocked { background: #32b56ac9; }
-
-/* logout button */
-.logout {
-    margin-top: 20px;
-    padding: 12px 18px;
-    background: #c0392b;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    font-size: 17px;
-    transition: 0.3s;
-}
-.logout:hover { background: #992d22; }
