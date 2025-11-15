@@ -1,18 +1,13 @@
-<input id="passwordInput" type="password">
-<button onclick="login()">Entrar</button>
-
-<script>
 function login() {
   const pass = document.getElementById("passwordInput").value.trim();
   let file = "";
 
-  if(pass === "ClaveA") file="panelA.enc";
-  else if(pass === "ClaveB") file="panelB.enc";
-  else if(pass === "ClaveC") file="panelC.enc";
+  if(pass === "ClaveA") file="panel-A.enc";
+  else if(pass === "ClaveB") file="panel-B.enc";
+  else if(pass === "ClaveC") file="panel-C.enc";
   else { alert("Contraseña incorrecta"); return; }
 
   localStorage.setItem("vault_key", pass);
   localStorage.setItem("vault_file", file);
   window.location.href = "panel.html";
 }
-</script>
