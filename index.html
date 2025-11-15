@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Acceso Seguro</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Secret Vault – Login</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
-
 <body class="login-body">
-  <div class="login-card">
-    <h1>🔐 The Secret Vault</h1>
-    <p>Introduce la contraseña para acceder</p>
 
-    <input type="password" id="passwordInput" placeholder="Contraseña" class="input" />
+<div class="login-card">
+  <h1>🔐 The Secret Vault</h1>
+  <p>Introduce tu contraseña</p>
+  <input id="passwordInput" type="password" placeholder="Contraseña" class="input">
+  <button class="btn" onclick="login()">Entrar</button>
+  <p id="error" class="error"></p>
+</div>
 
-    <button onclick="login()" class="btn">Acceder</button>
-    <p id="error" class="error"></p>
-  </div>
+<script>
+  const validPasswords = [
+    "Maestra1", "Maestra2", "Maestra3", "Maestra4", "Maestra5",
+    "Maestra6", "Maestra7", "Maestra8", "Maestra9", "Maestra10"
+  ];
 
-  <script>
-    function login() {
-      const pass = document.getElementById("passwordInput").value.trim();
-
-      if (!pass) {
-        document.getElementById("error").textContent = "Introduce una contraseña.";
-        return;
-      }
-
-      localStorage.setItem("vault_key", pass);
-      window.location.href = "panel.html";
+  function login() {
+    const pass = document.getElementById("passwordInput").value.trim();
+    if (!pass) {
+      document.getElementById("error").textContent = "Introduce una contraseña.";
+      return;
     }
-  </script>
+
+    // Verifica si es una contraseña válida
+    if (!validPasswords.includes(pass)) {
+      document.getElementById("error").textContent = "Contraseña incorrecta.";
+      return;
+    }
+
+    // Guarda la contraseña y el archivo en localStorage
+    localStorage.setItem("vault_key", pass);
+    localStorage.setItem("vault_file", "panel.enc"); // solo un archivo cifrado
+
+    window.location.href = "panel.html";
+  }
+</script>
+
 </body>
 </html>
