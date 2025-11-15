@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Panel – The Secret Vault</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+<div id="content">Cargando panel...</div>
+
+<script>
 const key = localStorage.getItem("vault_key");
 const file = localStorage.getItem("vault_file");
 
@@ -17,3 +29,6 @@ fetch(file)
 
   document.getElementById("content").innerHTML = decrypted;
 });
+</script>
+</body>
+</html>
