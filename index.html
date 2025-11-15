@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>The Secret Vault – Acceso</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acceso Seguro</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
+
 <body class="login-body">
+  <div class="login-card">
+    <h1>🔐 The Secret Vault</h1>
+    <p>Introduce la contraseña para acceder</p>
 
-<div class="login-container">
-    <h1 class="title">The Secret Vault</h1>
-    <p class="subtitle">Acceso restringido</p>
+    <input type="password" id="passwordInput" placeholder="Contraseña" class="input" />
 
-    <input id="pass" type="password" placeholder="Introduce la contraseña">
-
-    <button onclick="login()" class="btn">Entrar</button>
-
+    <button onclick="login()" class="btn">Acceder</button>
     <p id="error" class="error"></p>
-</div>
+  </div>
 
-<script>
-const files = [
-    "panel-A.enc","panel-B.enc","panel-C.enc","panel-D.enc","panel-E.enc",
-    "panel-F.enc","panel-G.enc","panel-H.enc","panel-I.enc","panel-J.enc"
-];
+  <script>
+    function login() {
+      const pass = document.getElementById("passwordInput").value.trim();
 
-function login() {
-    const input = document.getElementById("pass").value.trim();
-    if (!input) return;
+      if (!pass) {
+        document.getElementById("error").textContent = "Introduce una contraseña.";
+        return;
+      }
 
-    localStorage.setItem("vault_key", input);
-
-    const randomFile = files[Math.floor(Math.random() * files.length)];
-    localStorage.setItem("vault_file", randomFile);
-
-    window.location.href = "panel.html";
-}
-</script>
-
+      localStorage.setItem("vault_key", pass);
+      window.location.href = "panel.html";
+    }
+  </script>
 </body>
 </html>
