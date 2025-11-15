@@ -17,39 +17,52 @@
 
 <script>
 const key = localStorage.getItem("vault_key");
-const file = localStorage.getItem("vault_file");
+if (!key) window.location.href = "index.html";
 
-// si no hay key → volver al login
-if (!key || !file) window.location.href = "index.html";
+const files = [
+    "vault/panel-A.enc",
+    "vault/panel-B.enc",
+    "vault/panel-C.enc",
+    "vault/panel-D.enc",
+    "vault/panel-E.enc",
+    "vault/panel-F.enc",
+    "vault/panel-G.enc",
+    "vault/panel-H.enc",
+    "vault/panel-I.enc",
+    "vault/panel-J.enc"
+];
 
-fetch(file)
-    .then(r => r.text())
-    .then(enc => {
-        enc = enc.trim();
-        let decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8);
+async function tryDecrypt() {
+    for (const file of files) {
+        try {
+            const enc = await fetch(file).then(r => r.text());
+            const dec = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8);
+            if (dec && dec.length > 20) return dec;
+        } catch {}
+    }
+    return null;
+}
 
-        if (!decrypted || decrypted.length < 10) {
-            document.body.innerHTML =
-                "<h2 style='color:white;text-align:center;margin-top:50px;'>Acceso denegado</h2>";
+(async () => {
+    const result = await tryDecrypt();
+
+    const delay = 200 + Math.random() * 1800;
+    setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+
+        if (!result) {
+            document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>Acceso denegado</h2>";
             return;
         }
 
-        // espera random entre 0.8 y 2.0 segundos
-        const delay = 800 + Math.random() * 1200;
-
-        setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
-
-            document.getElementById("content").innerHTML =
-                decrypted + `<button class='logout' onclick="logout()">Cerrar sesión</button>`;
-            document.getElementById("content").classList.remove("hidden");
-
-        }, delay);
-    });
+        document.getElementById("content").innerHTML =
+            result + `<button onclick="logout()" class='logout'>Cerrar sesión</button>`;
+        document.getElementById("content").classList.remove("hidden");
+    }, delay);
+})();
 
 function logout() {
-    localStorage.removeItem("vault_key");
-    localStorage.removeItem("vault_file");
+    localStorage.clear();
     window.location.href = "index.html";
 }
 </script>

@@ -12,27 +12,21 @@
     <p class="subtitle">Acceso restringido</p>
 
     <input id="pass" type="password" placeholder="Introduce la contraseña">
-
     <button onclick="login()" class="btn">Entrar</button>
-
     <p id="error" class="error"></p>
 </div>
 
 <script>
-const files = [
-    "panel-A.enc","panel-B.enc","panel-C.enc","panel-D.enc","panel-E.enc",
-    "panel-F.enc","panel-G.enc","panel-H.enc","panel-I.enc","panel-J.enc"
-];
-
 function login() {
-    const input = document.getElementById("pass").value.trim();
-    if (!input) return;
+    const pass = document.getElementById("pass").value.trim();
+    const error = document.getElementById("error");
 
-    localStorage.setItem("vault_key", input);
+    if (!pass) {
+        error.textContent = "Introduce una contraseña.";
+        return;
+    }
 
-    const randomFile = files[Math.floor(Math.random() * files.length)];
-    localStorage.setItem("vault_file", randomFile);
-
+    localStorage.setItem("vault_key", pass);
     window.location.href = "panel.html";
 }
 </script>
