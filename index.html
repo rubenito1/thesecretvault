@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>The Secret Vault</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Login</h1>
+<input id="passwordInput" type="password" placeholder="Introduce la contraseña">
+<button onclick="login()">Entrar</button>
+
+<script>
 function login() {
   const pass = document.getElementById("passwordInput").value.trim();
   let file = "";
@@ -11,3 +24,6 @@ function login() {
   localStorage.setItem("vault_file", file);
   window.location.href = "panel.html";
 }
+</script>
+</body>
+</html>
