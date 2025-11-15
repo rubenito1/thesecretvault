@@ -2,28 +2,40 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>The Secret Vault</title>
-<link rel="stylesheet" href="style.css">
+<title>The Secret Vault – Acceso</title>
+<link rel="stylesheet" href="styles.css">
 </head>
-<body>
-<h1>Login</h1>
-<input id="passwordInput" type="password" placeholder="Introduce la contraseña">
-<button onclick="login()">Entrar</button>
+<body class="login-body">
+
+<div class="login-container">
+    <h1 class="title">The Secret Vault</h1>
+    <p class="subtitle">Acceso restringido</p>
+
+    <input id="pass" type="password" placeholder="Introduce la contraseña">
+
+    <button onclick="login()" class="btn">Entrar</button>
+
+    <p id="error" class="error"></p>
+</div>
 
 <script>
+const files = [
+    "panel-A.enc","panel-B.enc","panel-C.enc","panel-D.enc","panel-E.enc",
+    "panel-F.enc","panel-G.enc","panel-H.enc","panel-I.enc","panel-J.enc"
+];
+
 function login() {
-  const pass = document.getElementById("passwordInput").value.trim();
-  let file = "";
+    const input = document.getElementById("pass").value.trim();
+    if (!input) return;
 
-  if(pass === "ClaveA") file="panel-A.enc";
-  else if(pass === "ClaveB") file="panel-B.enc";
-  else if(pass === "ClaveC") file="panel-C.enc";
-  else { alert("Contraseña incorrecta"); return; }
+    localStorage.setItem("vault_key", input);
 
-  localStorage.setItem("vault_key", pass);
-  localStorage.setItem("vault_file", file);
-  window.location.href = "panel.html";
+    const randomFile = files[Math.floor(Math.random() * files.length)];
+    localStorage.setItem("vault_file", randomFile);
+
+    window.location.href = "panel.html";
 }
 </script>
+
 </body>
 </html>

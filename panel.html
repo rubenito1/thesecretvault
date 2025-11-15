@@ -3,32 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <title>Panel – The Secret Vault</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="styles.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
-<body>
-<div id="content">Cargando panel...</div>
+<body class="panel-body">
+
+<div id="loader" class="loader-screen">
+    <div class="spinner"></div>
+    <p>Cargando panel seguro...</p>
+</div>
+
+<div id="content" class="hidden"></div>
 
 <script>
 const key = localStorage.getItem("vault_key");
 const file = localStorage.getItem("vault_file");
 
-if(!key || !file) window.location.href="index.html";
+// si no hay key → volver al login
+if (!key || !file) window.location.href = "index.html";
 
 fetch(file)
-.then(r => r.text())
-.then(enc => {
-  enc = enc.trim();
-  let decrypted = "";
-  try { decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8); } catch {}
+    .then(r => r.text())
+    .then(enc => {
+        enc = enc.trim();
+        let decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8);
 
-  if(!decrypted || decrypted.length < 5) {
-    document.getElementById("content").innerHTML = "<h2>Acceso denegado</h2>";
-    return;
-  }
+        if (!decrypted || decrypted.length < 10) {
+            document.body.innerHTML =
+                "<h2 style='color:white;text-align:center;margin-top:50px;'>Acceso denegado</h2>";
+            return;
+        }
 
-  document.getElementById("content").innerHTML = decrypted;
-});
+        // espera random entre 0.8 y 2.0 segundos
+        const delay = 800 + Math.random() * 1200;
+
+        setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+
+            document.getElementById("content").innerHTML =
+                decrypted + `<button class='logout' onclick="logout()">Cerrar sesión</button>`;
+            document.getElementById("content").classList.remove("hidden");
+
+        }, delay);
+    });
+
+function logout() {
+    localStorage.removeItem("vault_key");
+    localStorage.removeItem("vault_file");
+    window.location.href = "index.html";
+}
 </script>
+
 </body>
 </html>
