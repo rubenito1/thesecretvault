@@ -1,61 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panel – The Secret Vault</title>
-<link rel="stylesheet" href="style.css">
+<div id="loader">Cargando...</div>
+<div id="content" class="hidden"></div>
+<button id="logoutBtn" class="hidden" onclick="logout()">Cerrar sesión</button>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-</head>
-<body class="panel-body">
-
-<div id="loader" class="loader-screen">
-  <div class="spinner"></div>
-  <p>Cargando panel seguro...</p>
-</div>
-
-<div id="content" class="panel-content hidden"></div>
-<button id="logoutBtn" class="logout-btn hidden" onclick="logout()">Cerrar sesión</button>
-
 <script>
 const key = localStorage.getItem("vault_key");
 const file = localStorage.getItem("vault_file");
 
-// Si no hay key → volver al login
-if (!key || !file) window.location.href = "index.html";
+if(!key || !file) window.location.href="index.html";
 
 fetch(file)
-  .then(r => r.text())
-  .then(enc => {
-    enc = enc.trim();
-    let decrypted = "";
-    try {
-      decrypted = CryptoJS.AES.decrypt(enc, key).toString(CryptoJS.enc.Utf8);
-    } catch {}
+.then(r=>r.text())
+.then(enc=>{
+  enc = enc.trim();
+  let decrypted = "";
+  try { decrypted = CryptoJS.AES.decrypt(enc,key).toString(CryptoJS.enc.Utf8); } catch {}
+  if(!decrypted || decrypted.length<5) {
+    document.getElementById("loader").style.display="none";
+    document.getElementById("content").classList.remove("hidden");
+    document.getElementById("content").innerHTML="<h2>Acceso denegado</h2>";
+    return;
+  }
+  const delay = 600+Math.random()*1400;
+  setTimeout(()=>{
+    document.getElementById("loader").style.display="none";
+    document.getElementById("content").classList.remove("hidden");
+    document.getElementById("logoutBtn").classList.remove("hidden");
+    document.getElementById("content").innerHTML=decrypted;
+  }, delay);
+});
 
-    if (!decrypted || decrypted.length < 5) {
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("content").classList.remove("hidden");
-      document.getElementById("content").innerHTML =
-        "<h2>Acceso denegado</h2><p>Contraseña incorrecta.</p>";
-      return;
-    }
-
-    const delay = 600 + Math.random() * 1400; // 0.6-2s
-    setTimeout(() => {
-      document.getElementById("loader").style.display = "none";
-      document.getElementById("content").classList.remove("hidden");
-      document.getElementById("logoutBtn").classList.remove("hidden");
-      document.getElementById("content").innerHTML = decrypted;
-    }, delay);
-  });
-
-function logout() {
+function logout(){
   localStorage.removeItem("vault_key");
   localStorage.removeItem("vault_file");
-  window.location.href = "index.html";
+  window.location.href="index.html";
 }
 </script>
-
-</body>
-</html>
